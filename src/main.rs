@@ -4,7 +4,7 @@ use std::fs;
 use std::path::PathBuf;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    println!("Rust Playground for Client!!!");
+    println!("Client of The Rust Playground");
 
     let cmd = RpCommand::parse();
 
