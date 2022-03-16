@@ -24,6 +24,12 @@ pub mod execute {
         #[serde(default)]
         pub error: String,
     }
+
+    impl Response {
+        pub fn is_error(&self) -> bool {
+            !self.success && !self.error.is_empty()
+        }
+    }
 }
 
 pub mod compile {
@@ -58,5 +64,22 @@ pub mod compile {
         pub stderr: String,
         #[serde(default)]
         pub error: String,
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::execute;
+
+    #[test]
+    fn test_response_is_error() {
+        let resp = execute::Response{
+            success: false,
+            stdout: "".to_string(),
+            stderr: "".to_string(),
+            error: "this is error".to_string(),
+        };
+
+        assert_eq!(true, resp.is_error());
     }
 }
