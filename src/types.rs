@@ -73,7 +73,7 @@ mod test {
 
     #[test]
     fn test_response_is_error() {
-        let resp = execute::Response{
+        let resp = execute::Response {
             success: false,
             stdout: "".to_string(),
             stderr: "".to_string(),
