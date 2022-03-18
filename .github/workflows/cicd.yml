@@ -68,7 +68,7 @@ jobs:
       with:
         command: test
 
-  build_and_publish:
+  build:
     name: Build and Publish (${{ matrix.job.os }}-${{ matrix.job.target }})
     needs: [test]
     runs-on: ${{ matrix.job.os }}
@@ -135,3 +135,68 @@ jobs:
         name: build-${{ matrix.job.target }}
         path: rp-${{ matrix.job.target }}.zip
 
+  is-release:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for release
+        id: is-release
+        shell: bash
+        run: |
+          unset IS_RELEASE;
+          if [[ $GITHUB_REF =~ ^refs/tags/v[0-9].* ]]; then
+            export IS_RELEASE="true"
+          else
+            export IS_RELEASE="false"
+          fi
+          echo "IS_RELEASE=${IS_RELEASE}" >> ${GITHUB_ENV}
+
+  create-release:
+    needs: [is-release]
+    if: ${{ env.IS_RELEASE }} == "true"
+    runs-on: ubuntu-latest
+    steps:
+      - id: create-release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: true
+      - run: |
+          echo '${{ steps.create-release.outputs.upload_url }}' > release_upload_url.txt
+      - uses: actions/upload-artifact@v1
+        with:
+          name: create-release
+          path: release_upload_url.txt
+
+  upload-release:
+    strategy:
+      matrix:
+        target:
+          - x86_64-unknown-linux-musl
+          - x86_64-pc-windows-msvc
+          - x86_64-apple-darwin
+    if: ${{ env.IS_RELEASE }} == "true"
+    needs: [create-release]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v1
+        with:
+          name: create-release
+      - id: upload-url
+        run: |
+          echo "::set-output name=url::$(cat create-release/release_upload_url.txt)"
+      - uses: actions/download-artifact@v1
+        with:
+          name: build-${{ matrix.target }}
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.upload-url.outputs.url }}
+          asset_path: ./build-${{ matrix.target }}/rp-${{ matrix.target }}.zip
+          asset_name: rp-${{ matrix.target }}.zip
+          asset_content_type: application/zip
