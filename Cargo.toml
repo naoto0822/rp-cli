@@ -1,10 +1,13 @@
 [package]
-name = "rp"
-version = "0.1.0"
 authors = ["naoto0822 <n.h.in.m.h@gmail.com>"]
+categories = ["command-line-utilities"]
+description = "This is a client of The Rust Playground."
+homepage = "https://github.com/naoto0822/rp"
+license = "MIT"
+name = "rp"
+repository = "https://github.com/naoto0822/rp"
+version = "0.1.0"
 edition = "2018"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 clap = { version = "3.0.14", features = ["derive"] }
