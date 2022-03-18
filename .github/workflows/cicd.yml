@@ -6,7 +6,8 @@ env:
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
     tags:
       - v*
 
@@ -137,24 +138,24 @@ jobs:
         name: build-${{ matrix.job.target }}
         path: rp-${{ matrix.job.target }}.zip
 
-  is-release:
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check for release
-        id: is-release
-        shell: bash
-        run: |
-          unset IS_RELEASE;
-          if [[ $GITHUB_REF =~ ^refs/tags/v[0-9].* ]]; then
-            export IS_RELEASE="true"
-          else
-            export IS_RELEASE="false"
-          fi
-          echo "IS_RELEASE=${IS_RELEASE}" >> ${GITHUB_ENV}
+    #is-release:
+    #  needs: [build]
+    #  runs-on: ubuntu-latest
+    #  steps:
+    #    - name: Check for release
+    #      id: is-release
+    #      shell: bash
+    #      run: |
+    #        unset IS_RELEASE;
+    #        if [[ $GITHUB_REF =~ ^refs/tags/v[0-9].* ]]; then
+    #          export IS_RELEASE="true"
+    #        else
+    #          export IS_RELEASE="false"
+    #        fi
+    #        echo "IS_RELEASE=${IS_RELEASE}" >> ${GITHUB_ENV}
 
   create-release:
-    needs: [is-release]
+    needs: [build]
     if: contains(github.ref, 'tags/v')
     runs-on: ubuntu-latest
     steps:
