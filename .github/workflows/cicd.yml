@@ -7,6 +7,8 @@ env:
 on:
   push:
     branches: [main]
+    tags:
+      - v*
 
 jobs:
   check_fmt_and_clipy:
@@ -153,7 +155,7 @@ jobs:
 
   create-release:
     needs: [is-release]
-    if: env.IS_RELEASE == "true"
+    if: contains(github.ref, 'tags/v')
     runs-on: ubuntu-latest
     steps:
       - id: create-release
@@ -179,7 +181,7 @@ jobs:
           - x86_64-unknown-linux-musl
           - x86_64-pc-windows-msvc
           - x86_64-apple-darwin
-    if: env.IS_RELEASE == "true"
+    if: contains(github.ref, 'tags/v')
     needs: [create-release]
     runs-on: ubuntu-latest
     steps:
