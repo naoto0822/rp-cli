@@ -16,13 +16,16 @@ jobs:
       matrix:
         job: [ { os: ubuntu-latest }, { os: macos-latest }, { os: windows-latest } ]
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout source code
+      uses: actions/checkout@v2
+
     - name: Install rust toolchain
       uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
         profile: default
         default: true
+
     - name: Run fmt
       uses: actions-rs/cargo@v1
       with:
@@ -42,15 +45,69 @@ jobs:
       matrix:
         job: [ { os: ubuntu-latest }, { os: macos-latest }, { os: windows-latest } ]
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout source code
+      uses: actions/checkout@v2
+
     - name: Install rust toolchain
       uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
         profile: default
         default: true
+
     - name: Run test
       uses: actions-rs/cargo@v1
       with:
         command: test
 
+  build_and_publish:
+    name: Build and Publish (${{ matrix.job.os }}-${{ matrix.job.target }})
+    runs-on: ${{ matrix.job.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        job:
+          - { target: aarch64-unknown-linux-gnu   , os: ubuntu-20.04, use-cross: true }
+          - { target: arm-unknown-linux-gnueabihf , os: ubuntu-20.04, use-cross: true }
+          - { target: arm-unknown-linux-musleabihf, os: ubuntu-20.04, use-cross: true }
+          - { target: i686-pc-windows-msvc        , os: windows-2019                  }
+          - { target: i686-unknown-linux-gnu      , os: ubuntu-20.04, use-cross: true }
+          - { target: i686-unknown-linux-musl     , os: ubuntu-20.04, use-cross: true }
+          - { target: x86_64-apple-darwin         , os: macos-10.15                   }
+          - { target: x86_64-pc-windows-gnu       , os: windows-2019                  }
+          - { target: x86_64-pc-windows-msvc      , os: windows-2019                  }
+          - { target: x86_64-unknown-linux-gnu    , os: ubuntu-20.04                  }
+          - { target: x86_64-unknown-linux-musl   , os: ubuntu-20.04, use-cross: true }
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v2
+
+    - name: Install rust toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        profile: default
+        default: true
+
+    - name: Install prerequisites
+      shell: bash
+      run: |
+        case ${{ matrix.job.target }} in
+          arm-unknown-linux-*) sudo apt-get -y update ; sudo apt-get -y install gcc-arm-linux-gnueabihf ;;
+          aarch64-unknown-linux-gnu) sudo apt-get -y update ; sudo apt-get -y install gcc-aarch64-linux-gnu ;;
+        esac
+
+    - name: Extract crate information
+      shell: bash
+      run: |
+        echo "PROJECT_NAME=$(sed -n 's/^name = "\(.*\)"/\1/p' Cargo.toml | head -n1)" >> $GITHUB_ENV
+        echo "PROJECT_VERSION=$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -n1)" >> $GITHUB_ENV
+        echo "PROJECT_MAINTAINER=$(sed -n 's/^authors = \["\(.*\)"\]/\1/p' Cargo.toml)" >> $GITHUB_ENV
+        echo "PROJECT_HOMEPAGE=$(sed -n 's/^homepage = "\(.*\)"/\1/p' Cargo.toml)" >> $GITHUB_ENV
+
+    - name: Build
+      uses: actions-rs/cargo@v1
+      with:
+        use-cross: ${{ matrix.job.use-cross }}
+        command: build
+        args: --release --target=${{ matrix.job.target }}

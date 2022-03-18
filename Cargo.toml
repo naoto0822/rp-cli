@@ -8,6 +8,7 @@ name = "rp"
 repository = "https://github.com/naoto0822/rp"
 version = "0.1.0"
 edition = "2018"
+exclude = ["examples/*"]
 
 [dependencies]
 clap = { version = "3.0.14", features = ["derive"] }
