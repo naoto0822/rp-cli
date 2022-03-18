@@ -100,6 +100,12 @@ jobs:
     - name: Extract crate information
       shell: bash
       run: |
+        dpkg -L libssl-dev | grep lib
+        dpkg -L libssl-dev | grep include
+
+        echo "OPENSSL_LIB_DIR=$(dpkg -L libssl-dev | grep lib)" >> $GITHUB_ENV
+        echo "OPENSSL_INCLUDE_DIR=$(dpkg -L libssl-dev | grep include)" >> $GITHUB_ENV
+
         echo "PROJECT_NAME=$(sed -n 's/^name = "\(.*\)"/\1/p' Cargo.toml | head -n1)" >> $GITHUB_ENV
         echo "PROJECT_VERSION=$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -n1)" >> $GITHUB_ENV
         echo "PROJECT_MAINTAINER=$(sed -n 's/^authors = \["\(.*\)"\]/\1/p' Cargo.toml)" >> $GITHUB_ENV
