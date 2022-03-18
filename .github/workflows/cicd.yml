@@ -95,7 +95,7 @@ jobs:
       if : matrix.job.target == 'x86_64-unknown-linux-musl'
       run: |
         sudo apt install -qq -y musl-tools --no-install-recommends
-        audo apt install -y gcc-arm-linux-gnueabihf
+        sudo apt install -y libssl-dev
 
     - name: Extract crate information
       shell: bash
