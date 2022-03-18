@@ -28,5 +28,29 @@ jobs:
       with:
         command: fmt
         args: --all -- --check
-    #TODO: clipy
+    # TODO: clipy
+
+  # TODO: min_version
+
+  # TODO: documentation
+
+  test:
+    name: Test
+    runs-on: ${{ matrix.job.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        job: [ { os: ubuntu-latest }, { os: macos-latest }, { os: windows-latest } ]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install rust toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        profile: default
+        default: true
+    - name: Run test
+      uses: actions-rs/cargo@v1
+      with:
+        command: test
 
