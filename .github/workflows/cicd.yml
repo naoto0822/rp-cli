@@ -153,7 +153,7 @@ jobs:
 
   create-release:
     needs: [is-release]
-    if: ${{ env.IS_RELEASE }} == "true"
+    if: ${IS_RELEASE} == "true"
     runs-on: ubuntu-latest
     steps:
       - id: create-release
