@@ -97,8 +97,8 @@ jobs:
         sudo apt install -qq -y musl-tools --no-install-recommends
         sudo apt install -y pkg-config libssl-dev
 
-        echo "OPENSSL_LIB_DIR=/usr/lib/x86_64-linux-gnu/" >> $GITHUB_ENV
-        echo "OPENSSL_INCLUDE_DIR=/usr/include/openssl/" >> $GITHUB_ENV
+        #echo "OPENSSL_LIB_DIR=/usr/lib/x86_64-linux-gnu/" >> $GITHUB_ENV
+        #echo "OPENSSL_INCLUDE_DIR=/usr/include/openssl/" >> $GITHUB_ENV
 
     - name: Extract crate information
       shell: bash
