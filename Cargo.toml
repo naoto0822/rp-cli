@@ -2,11 +2,11 @@
 authors = ["naoto0822 <n.h.in.m.h@gmail.com>"]
 categories = ["command-line-utilities"]
 description = "This is a client of The Rust Playground."
-homepage = "https://github.com/naoto0822/rp"
+homepage = "https://github.com/naoto0822/rp-cli"
 license = "MIT"
-name = "rp"
-repository = "https://github.com/naoto0822/rp"
-version = "0.1.0"
+name = "rp-cli"
+repository = "https://github.com/naoto0822/rp-cli"
+version = "0.0.1"
 edition = "2018"
 exclude = ["examples/*"]
 
@@ -18,5 +18,5 @@ path = "src/bin/main.rs"
 clap = { version = "3.0.14", features = ["derive"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-# reqwest = { version = "0.11", features = ["json", "blocking"] }
 reqwest = { version = "0.11", default-features = false, features = ["json", "blocking", "rustls-tls"] }
+# reqwest = { version = "0.11", features = ["json", "blocking"] }
