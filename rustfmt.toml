@@ -1,3 +1,1 @@
-ignore = [
-  "examples/fmt.rs",
-]
+# Defaults are used
