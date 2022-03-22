@@ -95,6 +95,51 @@ pub mod fmt {
     }
 }
 
+pub mod share {
+    use serde::{Deserialize, Serialize};
+
+    #[derive(Serialize)]
+    pub struct Request {
+        pub code: String,
+    }
+
+    #[derive(Debug, Deserialize)]
+    pub struct Response {
+        #[serde(default)]
+        pub id: String,
+        #[serde(default)]
+        pub url: String,
+        #[serde(default)]
+        pub code: String,
+    }
+
+    impl Response {
+        // Permalink to the playground
+        pub fn playground_url(&self) -> String {
+            // TODO: be const
+            // TODO: relay version, mode, edition
+            let url = format!(
+                "https://play.rust-lang.org/?version={}&mode={}&edition={}&gist={}",
+                "stable", "debug", "2021", self.id
+            );
+
+            url
+        }
+
+        // Direct link to the gist
+        pub fn gist_url(&self) -> String {
+            // TODO: be const
+            let url = format!("https://gist.github.com/{}", self.id);
+
+            url
+        }
+
+        // TODO: Embedded code in link
+
+        // TODO: Open a new thread in the Rust user forum
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::execute;

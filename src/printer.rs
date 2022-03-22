@@ -1,4 +1,4 @@
-use crate::api_types::{compile, execute, fmt};
+use crate::api_types::{compile, execute, fmt, share};
 use std::io::{self, Write};
 
 // TODO
@@ -14,6 +14,8 @@ use std::io::{self, Write};
 
 const DEFAULT_ROW_LEN: usize = 90;
 const EXECUTION_TITLE: &str = "Execution";
+const FORMAT_TITLE: &str = "Format";
+const SHARE_TITLE: &str = "Share";
 const STDOUT_TITLE: &str = "Standard Output";
 const STDERR_TITLE: &str = "Standard Error";
 const ERROR_TITLE: &str = "Error";
@@ -35,6 +37,7 @@ impl Printer {
         }
     }
 
+    // TODO: refactor
     pub fn print_run(&mut self, res: execute::Response) -> Result<(), Box<dyn std::error::Error>> {
         if !res.is_error() {
             self.print_horizontal_line()?;
@@ -70,6 +73,22 @@ impl Printer {
         Ok(())
     }
 
+    pub fn print_share(&mut self, res: share::Response) -> Result<(), Box<dyn std::error::Error>> {
+        self.print_horizontal_line()?;
+        self.print_header(SHARE_TITLE.to_string())?;
+        self.print_horizontal_line()?;
+        self.print_header("Permalink to the playground".to_string())?;
+        self.print_horizontal_line()?;
+        self.print_body(res.playground_url())?;
+        self.print_horizontal_line()?;
+        self.print_header("Direct link to the gist".to_string())?;
+        self.print_horizontal_line()?;
+        self.print_body(res.gist_url())?;
+        self.print_horizontal_line()?;
+
+        Ok(())
+    }
+
     fn print_error(&mut self, message: String) -> Result<(), Box<dyn std::error::Error>> {
         self.print_horizontal_line()?;
         self.print_header(ERROR_TITLE.to_string())?;
@@ -96,6 +115,13 @@ impl Printer {
 
     fn print_horizontal_line(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         writeln!(self.writer, "{}", "-".repeat(self.width))?;
+
+        Ok(())
+    }
+
+    fn print_new_line(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        writeln!(self.writer, "");
+
         Ok(())
     }
 

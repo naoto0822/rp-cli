@@ -1,5 +1,5 @@
 use crate::api::{APIClient, API};
-use crate::api_types::{compile, execute, fmt};
+use crate::api_types::{compile, execute, fmt, share};
 use crate::input;
 use crate::printer::Printer;
 
@@ -60,6 +60,18 @@ impl Handler {
         let resp = self.api_cli.fmt(request)?;
 
         self.printer.print_fmt(resp)?;
+
+        Ok(())
+    }
+
+    pub fn share(&mut self, input: input::ShareInput) -> Result<(), Box<dyn std::error::Error>> {
+        let code = input::code_from_path(&input.file_path)?;
+
+        let request = share::Request { code: code };
+
+        let resp = self.api_cli.share(request)?;
+
+        self.printer.print_share(resp)?;
 
         Ok(())
     }

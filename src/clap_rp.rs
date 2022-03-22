@@ -1,5 +1,5 @@
 use crate::handler::Handler;
-use crate::input::{FmtInput, RunInput};
+use crate::input::{FmtInput, RunInput, ShareInput};
 use clap::{Args, Parser, Subcommand};
 use std::path::PathBuf;
 
@@ -23,6 +23,11 @@ impl Rp {
                 let input = args.input();
                 handler.fmt(input)?;
                 Ok(())
+            }
+            RpSubCommand::Share(args) => {
+                let input = args.input();
+                handler.share(input)?;
+                Ok(())
             } // error handling...
         }
     }
@@ -35,6 +40,9 @@ pub enum RpSubCommand {
 
     #[clap(name = "fmt")]
     Fmt(FmtArgs),
+
+    #[clap(name = "share")]
+    Share(ShareArgs),
 }
 
 #[derive(Args, PartialEq, Debug)]
@@ -83,6 +91,20 @@ impl FmtArgs {
     fn input(&self) -> FmtInput {
         FmtInput {
             edition: self.edition.clone(),
+            file_path: self.file_path.clone(),
+        }
+    }
+}
+
+#[derive(Args, PartialEq, Debug)]
+pub struct ShareArgs {
+    #[clap(required = true, parse(from_os_str))]
+    file_path: PathBuf,
+}
+
+impl ShareArgs {
+    fn input(&self) -> ShareInput {
+        ShareInput {
             file_path: self.file_path.clone(),
         }
     }

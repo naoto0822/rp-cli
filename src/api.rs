@@ -1,10 +1,11 @@
-use crate::api_types::{compile, execute, fmt};
+use crate::api_types::{compile, execute, fmt, share};
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
 const BASE_URL: &str = "https://play.rust-lang.org/";
 const PATH_EXECUTE: &str = "execute";
 const PATH_COMPILE: &str = "compile";
 const PATH_FMT: &str = "format";
+const PATH_SHARE: &str = "meta/gist";
 
 pub trait API {
     fn execute(
@@ -17,6 +18,8 @@ pub trait API {
     ) -> Result<compile::Response, Box<dyn std::error::Error>>;
 
     fn fmt(&self, req: fmt::Request) -> Result<fmt::Response, Box<dyn std::error::Error>>;
+
+    fn share(&self, req: share::Request) -> Result<share::Response, Box<dyn std::error::Error>>;
 }
 
 pub struct APIClient {
@@ -63,7 +66,11 @@ impl API for APIClient {
 
     fn fmt(&self, req: fmt::Request) -> Result<fmt::Response, Box<dyn std::error::Error>> {
         let res: fmt::Response = self.post(PATH_FMT, req)?;
-        println!("{:?}", res);
+        Ok(res)
+    }
+
+    fn share(&self, req: share::Request) -> Result<share::Response, Box<dyn std::error::Error>> {
+        let res: share::Response = self.post(PATH_SHARE, req)?;
         Ok(res)
     }
 }
