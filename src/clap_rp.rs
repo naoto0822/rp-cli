@@ -1,5 +1,5 @@
 use crate::handler::Handler;
-use crate::input::{RunInput, FmtInput};
+use crate::input::{FmtInput, RunInput};
 use clap::{Args, Parser, Subcommand};
 use std::path::PathBuf;
 
@@ -18,13 +18,12 @@ impl Rp {
                 let input = args.input();
                 handler.run(input)?;
                 Ok(())
-            },
+            }
             RpSubCommand::Fmt(args) => {
                 let input = args.input();
                 handler.fmt(input)?;
                 Ok(())
-            },
-            // error handling...
+            } // error handling...
         }
     }
 }
@@ -73,7 +72,6 @@ impl RunArgs {
 
 #[derive(Args, PartialEq, Debug)]
 pub struct FmtArgs {
-
     #[clap(long = "edition", default_value = "2021", required = false)]
     edition: String,
 

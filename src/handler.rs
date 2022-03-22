@@ -1,7 +1,7 @@
 use crate::api::{APIClient, API};
+use crate::api_types::{compile, execute, fmt};
 use crate::input;
 use crate::printer::Printer;
-use crate::api_types::{compile, execute, fmt};
 
 pub struct Handler {
     // TODO: mockable for test

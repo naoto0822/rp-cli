@@ -16,10 +16,7 @@ pub trait API {
         req: compile::Request,
     ) -> Result<compile::Response, Box<dyn std::error::Error>>;
 
-    fn fmt(
-        &self,
-        req: fmt::Request,
-    ) -> Result<fmt::Response, Box<dyn std::error::Error>>;
+    fn fmt(&self, req: fmt::Request) -> Result<fmt::Response, Box<dyn std::error::Error>>;
 }
 
 pub struct APIClient {
