@@ -1,4 +1,4 @@
-use crate::types::{compile, execute};
+use crate::api_types::{compile, execute};
 
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 

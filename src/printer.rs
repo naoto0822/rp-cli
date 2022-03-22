@@ -1,6 +1,5 @@
 use std::io::{self, Write};
-
-use crate::types::{compile, execute};
+use crate::api_types::{compile, execute};
 
 // TODO
 // pub enum OutputType {
