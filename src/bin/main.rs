@@ -1,5 +1,5 @@
 use clap::Parser;
-use rp::clap_rp::Rp;
+use rp_cli::clap_rp::Rp;
 use std::process;
 
 fn main() {
