@@ -67,6 +67,34 @@ pub mod compile {
     }
 }
 
+pub mod fmt {
+    use serde::{Deserialize, Serialize};
+
+    #[derive(Serialize)]
+    pub struct Request {
+        pub edition: String,
+        pub code: String,
+    }
+
+    #[derive(Debug, Deserialize)]
+    pub struct Response {
+        #[serde(default)]
+        pub success: bool,
+        #[serde(default)]
+        pub stdout: String,
+        #[serde(default)]
+        pub stderr: String,
+        #[serde(default)]
+        pub code: String,
+    }
+
+    impl Response {
+        pub fn is_error(&self) -> bool {
+            !self.success
+        }
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::execute;

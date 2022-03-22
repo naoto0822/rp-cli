@@ -1,5 +1,5 @@
 use std::io::{self, Write};
-use crate::api_types::{compile, execute};
+use crate::api_types::{compile, execute, fmt};
 
 // TODO
 // pub enum OutputType {
@@ -35,20 +35,46 @@ impl Printer {
         }
     }
 
-    // pub fn print(&mut self) {}
-
-    // TODO: default Stdout + Table
     pub fn print_run(&mut self, res: execute::Response) -> Result<(), Box<dyn std::error::Error>> {
+        if !res.is_error() {
+            self.print_horizontal_line()?;
+            self.print_header(EXECUTION_TITLE.to_string())?;
+            self.print_horizontal_line()?;
+            self.print_header(STDERR_TITLE.to_string())?;
+            self.print_horizontal_line()?;
+            self.print_body(res.stderr)?;
+            self.print_horizontal_line()?;
+            self.print_header(STDOUT_TITLE.to_string())?;
+            self.print_horizontal_line()?;
+            self.print_body(res.stdout)?;
+            self.print_horizontal_line()?;
+        } else {
+            self.print_error(res.error)?;
+        }
+
+        Ok(())
+    }
+
+    pub fn print_fmt(&mut self, res: fmt::Response) -> Result<(), Box<dyn std::error::Error>> {
+        if !res.is_error() {
+            self.print_horizontal_line()?;
+            self.print_header(EXECUTION_TITLE.to_string())?;
+            self.print_horizontal_line()?;
+            self.print_body(res.code)?;
+            self.print_horizontal_line()?;
+        } else {
+            // TODO: res.code is empty when error
+            self.print_error(res.code)?;
+        }
+
+        Ok(())
+    }
+
+    fn print_error(&mut self, message: String) -> Result<(), Box<dyn std::error::Error>> {
         self.print_horizontal_line()?;
-        self.print_header(EXECUTION_TITLE.to_string())?;
+        self.print_header(ERROR_TITLE.to_string())?;
         self.print_horizontal_line()?;
-        self.print_header(STDERR_TITLE.to_string())?;
-        self.print_horizontal_line()?;
-        self.print_body(res.stderr)?;
-        self.print_horizontal_line()?;
-        self.print_header(STDOUT_TITLE.to_string())?;
-        self.print_horizontal_line()?;
-        self.print_body(res.stdout)?;
+        self.print_body(message)?;
         self.print_horizontal_line()?;
 
         Ok(())

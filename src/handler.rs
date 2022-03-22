@@ -1,7 +1,7 @@
 use crate::api::{APIClient, API};
 use crate::input;
 use crate::printer::Printer;
-use crate::api_types::{compile, execute};
+use crate::api_types::{compile, execute, fmt};
 
 pub struct Handler {
     // TODO: mockable for test
@@ -45,6 +45,21 @@ impl Handler {
         //
 
         self.printer.print_run(resp)?;
+
+        Ok(())
+    }
+
+    pub fn fmt(&mut self, input: input::FmtInput) -> Result<(), Box<dyn std::error::Error>> {
+        let code = input::code_from_path(&input.file_path)?;
+
+        let request = fmt::Request {
+            edition: input.edition,
+            code: code,
+        };
+
+        let resp = self.api_cli.fmt(request)?;
+
+        self.printer.print_fmt(resp)?;
 
         Ok(())
     }

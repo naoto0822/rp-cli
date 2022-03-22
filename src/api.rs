@@ -1,10 +1,10 @@
-use crate::api_types::{compile, execute};
-
+use crate::api_types::{compile, execute, fmt};
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
 const BASE_URL: &str = "https://play.rust-lang.org/";
 const PATH_EXECUTE: &str = "execute";
 const PATH_COMPILE: &str = "compile";
+const PATH_FMT: &str = "format";
 
 pub trait API {
     fn execute(
@@ -15,6 +15,11 @@ pub trait API {
         &self,
         req: compile::Request,
     ) -> Result<compile::Response, Box<dyn std::error::Error>>;
+
+    fn fmt(
+        &self,
+        req: fmt::Request,
+    ) -> Result<fmt::Response, Box<dyn std::error::Error>>;
 }
 
 pub struct APIClient {
@@ -56,6 +61,12 @@ impl API for APIClient {
         req: compile::Request,
     ) -> Result<compile::Response, Box<dyn std::error::Error>> {
         let res: compile::Response = self.post(PATH_COMPILE, req)?;
+        Ok(res)
+    }
+
+    fn fmt(&self, req: fmt::Request) -> Result<fmt::Response, Box<dyn std::error::Error>> {
+        let res: fmt::Response = self.post(PATH_FMT, req)?;
+        println!("{:?}", res);
         Ok(res)
     }
 }

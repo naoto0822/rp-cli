@@ -1,5 +1,5 @@
 use crate::handler::Handler;
-use crate::input::RunInput;
+use crate::input::{RunInput, FmtInput};
 use clap::{Args, Parser, Subcommand};
 use std::path::PathBuf;
 
@@ -18,7 +18,13 @@ impl Rp {
                 let input = args.input();
                 handler.run(input)?;
                 Ok(())
-            } // error handling...
+            },
+            RpSubCommand::Fmt(args) => {
+                let input = args.input();
+                handler.fmt(input)?;
+                Ok(())
+            },
+            // error handling...
         }
     }
 }
@@ -27,6 +33,9 @@ impl Rp {
 pub enum RpSubCommand {
     #[clap(name = "run")]
     Run(RunArgs),
+
+    #[clap(name = "fmt")]
+    Fmt(FmtArgs),
 }
 
 #[derive(Args, PartialEq, Debug)]
@@ -57,6 +66,25 @@ impl RunArgs {
             channel: self.channel.clone(),
             edition: self.edition.clone(),
             backtrace: self.backtrace,
+            file_path: self.file_path.clone(),
+        }
+    }
+}
+
+#[derive(Args, PartialEq, Debug)]
+pub struct FmtArgs {
+
+    #[clap(long = "edition", default_value = "2021", required = false)]
+    edition: String,
+
+    #[clap(required = true, parse(from_os_str))]
+    file_path: PathBuf,
+}
+
+impl FmtArgs {
+    fn input(&self) -> FmtInput {
+        FmtInput {
+            edition: self.edition.clone(),
             file_path: self.file_path.clone(),
         }
     }
