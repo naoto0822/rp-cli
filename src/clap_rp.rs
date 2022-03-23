@@ -1,5 +1,5 @@
 use crate::handler::Handler;
-use crate::input::{FmtInput, RunInput, ShareInput, DownloadInput};
+use crate::input::{DownloadInput, FmtInput, RunInput, ShareInput};
 use clap::{Args, Parser, Subcommand};
 use std::path::PathBuf;
 
@@ -33,8 +33,7 @@ impl Rp {
                 let input = args.input();
                 handler.download(input)?;
                 Ok(())
-            }
-            // error handling...
+            } // error handling...
         }
     }
 }
@@ -59,7 +58,6 @@ pub struct RunArgs {
     // TODO: support other run_type (build, test, wasm,,,)
     // https://github.com/clap-rs/clap/blob/master/examples/tutorial_derive/04_01_enum.rs
     // run_type: ENUM
-
     #[clap(long = "mode", default_value = "debug", required = false)]
     mode: String,
 

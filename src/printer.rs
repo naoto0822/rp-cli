@@ -1,4 +1,4 @@
-use crate::api_types::{compile, execute, fmt, share, download};
+use crate::api_types::{compile, download, execute, fmt, share};
 use std::io::{self, Write};
 
 // TODO
@@ -93,7 +93,10 @@ impl Printer {
         Ok(())
     }
 
-    pub fn print_download(&mut self, res: download::Response) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn print_download(
+        &mut self,
+        res: download::Response,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         self.print_horizontal_line()?;
         self.print_header(DL_TITLE.to_string())?;
         self.print_horizontal_line()?;

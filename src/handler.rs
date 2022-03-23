@@ -1,9 +1,9 @@
-use std::collections::HashMap;
 use crate::api::{APIClient, API, BASE_URL};
-use crate::api_types::{compile, execute, fmt, share, download};
+use crate::api_types::{compile, download, execute, fmt, share};
 use crate::input;
 use crate::printer::Printer;
-use url::{Url, ParseError};
+use std::collections::HashMap;
+use url::{ParseError, Url};
 
 pub struct Handler {
     // TODO: mockable for test
@@ -78,12 +78,13 @@ impl Handler {
         Ok(())
     }
 
-    pub fn download(&mut self, input: input::DownloadInput) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn download(
+        &mut self,
+        input: input::DownloadInput,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let id = pick_id_from(input.id_or_url)?;
 
-        let request = download::Request{
-            id: id,
-        };
+        let request = download::Request { id: id };
 
         let resp = self.api_cli.download(request)?;
 
@@ -107,7 +108,7 @@ fn pick_id_from(id_or_url: String) -> Result<String, Box<std::error::Error>> {
                 None => return Ok("".to_string()),
             };
         } else {
-            return Ok("".to_string())
+            return Ok("".to_string());
         }
     } else {
         // maybe id

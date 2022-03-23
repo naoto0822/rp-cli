@@ -1,4 +1,4 @@
-use crate::api_types::{compile, execute, fmt, share, download};
+use crate::api_types::{compile, download, execute, fmt, share};
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
 pub const BASE_URL: &str = "https://play.rust-lang.org/";
@@ -22,7 +22,10 @@ pub trait API {
 
     fn share(&self, req: share::Request) -> Result<share::Response, Box<dyn std::error::Error>>;
 
-    fn download(&self, req: download::Request) -> Result<download::Response, Box<dyn std::error::Error>>;
+    fn download(
+        &self,
+        req: download::Request,
+    ) -> Result<download::Response, Box<dyn std::error::Error>>;
 }
 
 pub struct APIClient {
@@ -36,7 +39,10 @@ impl APIClient {
         }
     }
 
-    fn get<D>(&self, path: &str) -> Result<D, Box<dyn std::error::Error>> where D: DeserializeOwned, {
+    fn get<D>(&self, path: &str) -> Result<D, Box<dyn std::error::Error>>
+    where
+        D: DeserializeOwned,
+    {
         let url = self.base_url.clone() + path;
         let res: D = reqwest::blocking::get(url)?.json()?;
 
@@ -83,7 +89,10 @@ impl API for APIClient {
         Ok(res)
     }
 
-    fn download(&self, req: download::Request) -> Result<download::Response, Box<dyn std::error::Error>> {
+    fn download(
+        &self,
+        req: download::Request,
+    ) -> Result<download::Response, Box<dyn std::error::Error>> {
         let path = format!("{}/{}", PATH_DL, req.id);
         let res: download::Response = self.get(&path)?;
 
