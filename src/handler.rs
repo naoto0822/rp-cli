@@ -1,7 +1,9 @@
-use crate::api::{APIClient, API};
-use crate::api_types::{compile, execute, fmt, share};
+use std::collections::HashMap;
+use crate::api::{APIClient, API, BASE_URL};
+use crate::api_types::{compile, execute, fmt, share, download};
 use crate::input;
 use crate::printer::Printer;
+use url::{Url, ParseError};
 
 pub struct Handler {
     // TODO: mockable for test
@@ -74,5 +76,41 @@ impl Handler {
         self.printer.print_share(resp)?;
 
         Ok(())
+    }
+
+    pub fn download(&mut self, input: input::DownloadInput) -> Result<(), Box<dyn std::error::Error>> {
+        let id = pick_id_from(input.id_or_url)?;
+
+        let request = download::Request{
+            id: id,
+        };
+
+        let resp = self.api_cli.download(request)?;
+
+        self.printer.print_download(resp)?;
+
+        Ok(())
+    }
+}
+
+// TODO: error handling
+fn pick_id_from(id_or_url: String) -> Result<String, Box<std::error::Error>> {
+    if id_or_url.starts_with(BASE_URL) {
+        // parse url
+        // https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=7b61a4b7baf87fb4b5feb8668721ff8b
+        let url = Url::parse(&id_or_url);
+        if let Ok(url) = url {
+            let hash_query: HashMap<_, _> = url.query_pairs().into_owned().collect();
+
+            match hash_query.get("gist") {
+                Some(id) => return Ok(id.to_string()),
+                None => return Ok("".to_string()),
+            };
+        } else {
+            return Ok("".to_string())
+        }
+    } else {
+        // maybe id
+        Ok(id_or_url)
     }
 }

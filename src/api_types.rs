@@ -140,6 +140,25 @@ pub mod share {
     }
 }
 
+pub mod download {
+    use serde::{Deserialize, Serialize};
+
+    #[derive(Serialize)]
+    pub struct Request {
+        pub id: String,
+    }
+
+    #[derive(Debug, Deserialize)]
+    pub struct Response {
+        #[serde(default)]
+        pub id: String,
+        #[serde(default)]
+        pub url: String,
+        #[serde(default)]
+        pub code: String,
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::execute;

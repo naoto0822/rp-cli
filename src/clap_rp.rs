@@ -1,5 +1,5 @@
 use crate::handler::Handler;
-use crate::input::{FmtInput, RunInput, ShareInput};
+use crate::input::{FmtInput, RunInput, ShareInput, DownloadInput};
 use clap::{Args, Parser, Subcommand};
 use std::path::PathBuf;
 
@@ -28,7 +28,13 @@ impl Rp {
                 let input = args.input();
                 handler.share(input)?;
                 Ok(())
-            } // error handling...
+            }
+            RpSubCommand::Download(args) => {
+                let input = args.input();
+                handler.download(input)?;
+                Ok(())
+            }
+            // error handling...
         }
     }
 }
@@ -43,6 +49,9 @@ pub enum RpSubCommand {
 
     #[clap(name = "share")]
     Share(ShareArgs),
+
+    #[clap(name = "download")]
+    Download(DownloadArgs),
 }
 
 #[derive(Args, PartialEq, Debug)]
@@ -50,6 +59,7 @@ pub struct RunArgs {
     // TODO: support other run_type (build, test, wasm,,,)
     // https://github.com/clap-rs/clap/blob/master/examples/tutorial_derive/04_01_enum.rs
     // run_type: ENUM
+
     #[clap(long = "mode", default_value = "debug", required = false)]
     mode: String,
 
@@ -106,6 +116,20 @@ impl ShareArgs {
     fn input(&self) -> ShareInput {
         ShareInput {
             file_path: self.file_path.clone(),
+        }
+    }
+}
+
+#[derive(Args, PartialEq, Debug)]
+pub struct DownloadArgs {
+    #[clap(required = true)]
+    id_or_url: String,
+}
+
+impl DownloadArgs {
+    fn input(&self) -> DownloadInput {
+        DownloadInput {
+            id_or_url: self.id_or_url.clone(),
         }
     }
 }

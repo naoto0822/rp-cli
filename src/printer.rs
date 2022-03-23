@@ -1,4 +1,4 @@
-use crate::api_types::{compile, execute, fmt, share};
+use crate::api_types::{compile, execute, fmt, share, download};
 use std::io::{self, Write};
 
 // TODO
@@ -19,6 +19,7 @@ const SHARE_TITLE: &str = "Share";
 const STDOUT_TITLE: &str = "Standard Output";
 const STDERR_TITLE: &str = "Standard Error";
 const ERROR_TITLE: &str = "Error";
+const DL_TITLE: &str = "Download";
 
 pub struct Printer {
     // TODO: be trait
@@ -37,7 +38,10 @@ impl Printer {
         }
     }
 
+    //
     // TODO: refactor
+    //
+
     pub fn print_run(&mut self, res: execute::Response) -> Result<(), Box<dyn std::error::Error>> {
         if !res.is_error() {
             self.print_horizontal_line()?;
@@ -84,6 +88,16 @@ impl Printer {
         self.print_header("Direct link to the gist".to_string())?;
         self.print_horizontal_line()?;
         self.print_body(res.gist_url())?;
+        self.print_horizontal_line()?;
+
+        Ok(())
+    }
+
+    pub fn print_download(&mut self, res: download::Response) -> Result<(), Box<dyn std::error::Error>> {
+        self.print_horizontal_line()?;
+        self.print_header(DL_TITLE.to_string())?;
+        self.print_horizontal_line()?;
+        self.print_body(res.code)?;
         self.print_horizontal_line()?;
 
         Ok(())
