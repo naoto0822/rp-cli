@@ -211,3 +211,24 @@ jobs:
           asset_path: ./build-${{ matrix.target }}/rp-${{ matrix.target }}.zip
           asset_name: rp-v${PROJECT_VERSION}-${{ matrix.target }}.zip
           asset_content_type: application/zip
+
+  publish-crates:
+    name: publish crates
+    runs-on: ubuntu-latest
+    if: contains(github.ref, 'tags/v')
+    needs: [upload-release]
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+
+      - name: Install rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: default
+          default: true
+
+      - name: Publish
+        shell: bash
+        run: |
+          cargo publish --token ${{ secrets.CRATES_TOKEN }}
