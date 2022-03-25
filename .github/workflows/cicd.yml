@@ -103,14 +103,6 @@ jobs:
         #echo "OPENSSL_LIB_DIR=/usr/lib/x86_64-linux-gnu/" >> $GITHUB_ENV
         #echo "OPENSSL_INCLUDE_DIR=/usr/include/openssl/" >> $GITHUB_ENV
 
-    - name: Extract crate information
-      shell: bash
-      run: |
-        echo "PROJECT_NAME=$(sed -n 's/^name = "\(.*\)"/\1/p' Cargo.toml | head -n1)" >> $GITHUB_ENV
-        echo "PROJECT_VERSION=$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -n1)" >> $GITHUB_ENV
-        echo "PROJECT_MAINTAINER=$(sed -n 's/^authors = \["\(.*\)"\]/\1/p' Cargo.toml)" >> $GITHUB_ENV
-        echo "PROJECT_HOMEPAGE=$(sed -n 's/^homepage = "\(.*\)"/\1/p' Cargo.toml)" >> $GITHUB_ENV
-
     - name: Build
       uses: actions-rs/cargo@v1
       with:
@@ -189,10 +181,7 @@ jobs:
       - name: Extract crate information
         shell: bash
         run: |
-          echo "PROJECT_NAME=$(sed -n 's/^name = "\(.*\)"/\1/p' Cargo.toml | head -n1)" >> $GITHUB_ENV
-          echo "PROJECT_VERSION=$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -n1)" >> $GITHUB_ENV
-          echo "PROJECT_MAINTAINER=$(sed -n 's/^authors = \["\(.*\)"\]/\1/p' Cargo.toml)" >> $GITHUB_ENV
-          echo "PROJECT_HOMEPAGE=$(sed -n 's/^homepage = "\(.*\)"/\1/p' Cargo.toml)" >> $GITHUB_ENV
+          echo "PROJECT_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
       - uses: actions/download-artifact@v1
         with:
