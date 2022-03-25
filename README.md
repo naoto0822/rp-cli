@@ -6,6 +6,8 @@
 
 rp-cli is a cli of The Rust Playground.
 
+![rp-cli-readme-gif](https://user-images.githubusercontent.com/1576894/160152674-e2f7df90-e77e-4d0f-8ce8-fc2adfbf06e4.gif)
+
 ## Installation
 
 ### From Source
