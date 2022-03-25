@@ -1,7 +1,7 @@
 [package]
 authors = ["naoto0822 <n.h.in.m.h@gmail.com>"]
 categories = ["command-line-utilities"]
-description = "This is a client of The Rust Playground."
+description = "rp-cli is a cli of The Rust Playground."
 homepage = "https://github.com/naoto0822/rp-cli"
 license = "MIT/Apache-2.0"
 name = "rp-cli"

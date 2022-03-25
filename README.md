@@ -1,6 +1,10 @@
 # rp-cli
 
 [![CICD](https://github.com/naoto0822/rp-cli/actions/workflows/cicd.yml/badge.svg)](https://github.com/naoto0822/rp-cli/actions/workflows/cicd.yml)
+![License](https://img.shields.io/crates/l/rp-cli)
+![Latest Version](https://img.shields.io/crates/v/rp-cli)
+
+rp-cli is a cli of The Rust Playground.
 
 ## Installation
 
@@ -9,6 +13,10 @@
 ```bash
 $ cargo install rp-cli
 ```
+
+### From Binaries
+
+The [release page](https://github.com/naoto0822/rp-cli/releases) includes precompiled binaries.
 
 ## Usage
 
@@ -47,6 +55,7 @@ $ rp download https://play.rust-lang.org/?version=stable&mode=debug&edition=2021
 - [ ] output file (fmt, download)
 - [ ] output JSON format
 - [ ] more test code...
+- [ ] declear custom error type
 
 ## Dependencies
 
@@ -66,4 +75,3 @@ Licensed under either of
    ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
 
 at your option.
-
