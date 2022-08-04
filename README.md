@@ -87,6 +87,11 @@ $ git tag v0.0.B
 $ git push origin v0.0.B
 ```
 
+4. Running CI
+
+- Creating Binaries
+- Publishing Crates
+
 ## Dependencies
 
 - [clap-rs/clap](https://github.com/clap-rs/clap)
