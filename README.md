@@ -69,7 +69,8 @@ $ rp download https://play.rust-lang.org/?version=stable&mode=debug&edition=2021
 
 ## Blog
 
-> TODO
+「rp-cli: Rust Playground CLI」
+https://naoto0822.medium.com/rp-cli-rust-playground-cli-10ba1666ae32
 
 ## License
 
