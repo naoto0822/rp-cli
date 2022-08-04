@@ -52,6 +52,41 @@ or
 $ rp download https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=234b1b3dd6bf3c13ec78ea86db21e2cd
 ```
 
+## Test
+
+```
+$ make test
+```
+
+## Development Run
+
+```
+$ cargo run run examples/main.rs
+```
+
+## Release
+
+1. Update Cargo.toml
+
+```diff
+- version = "0.0.A"
++ version = "0.0.B"
+```
+
+2. Update Cargo.lock
+
+```
+$ make test
+```
+
+3. Commit and Tag and Push
+
+```
+$ git add . && git commit -m "Version 0.0.B" && git push origin main
+$ git tag v0.0.B
+$ git push origin v0.0.B
+```
+
 ## Dependencies
 
 - [clap-rs/clap](https://github.com/clap-rs/clap)
